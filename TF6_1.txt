@@ -1,0 +1,5 @@
+Python
+Text file processing
+Programming language Python is very interesting
+Sumy State University
+Hello world!

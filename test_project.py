@@ -1,45 +1,34 @@
-"""РќРµРІРµР»РёРєС– Р°РІС‚РѕРјР°С‚РёР·РѕРІР°РЅС– РїРµСЂРµРІС–СЂРєРё РїСЂРѕРіСЂР°РјРё (СЃС‚Р°РЅРґР°СЂС‚РЅРёР№ unittest)."""
 
-import os
-import tempfile
+# Автоматичне тестування програми
+# Практична робота: Оброблення текстових файлів
+# Варіант 6
+
 import unittest
-
-from create_file import create_file
-from display_file import display_file
-from process_file import count_words, get_words, process_file
+from process_file import format_line
 
 
-class TestTextFiles(unittest.TestCase):
-    def test_split_punctuation(self):
-        self.assertEqual(get_words("РЇ, С‚Рё! РљРѕРґ; СЃР»РѕРІРѕ."), ["РЇ", "С‚Рё", "РљРѕРґ", "СЃР»РѕРІРѕ"])
+class TestFileProcessing(unittest.TestCase):
 
-    def test_count_and_repetitions(self):
-        groups = count_words("РЇ, СЏ! РєРѕРґ РєРѕРґ; РјРѕСЂРµ.")
-        self.assertEqual(len(groups[1]), 2)
-        self.assertEqual(len(groups[3]), 2)
-        self.assertEqual(len(groups[4]), 1)
+    # Перевірка доповнення короткого рядка пробілами
+    def test_short_line(self):
+        result = format_line("Python")
 
-    def test_max_length(self):
-        self.assertEqual(len(count_words("РјС–РєСЂРѕРїСЂРѕС†РµСЃРѕСЂРЅРёР№")[16]), 1)
-        with self.assertRaises(ValueError):
-            count_words("РµР»РµРєС‚СЂРѕРѕР±Р»Р°РґРЅР°РЅРЅСЏ")  # 17 СЃРёРјРІРѕР»С–РІ
+        self.assertEqual(len(result), 20)
+        self.assertEqual(result, "Python" + " " * 14)
 
-    def test_files_and_output(self):
-        with tempfile.TemporaryDirectory() as folder:
-            source = os.path.join(folder, "TF4_1.txt")
-            result = os.path.join(folder, "TF4_2.txt")
-            self.assertTrue(create_file(source))
-            self.assertTrue(process_file(source, result))
-            self.assertTrue(display_file(result))
-            with open(result, encoding="utf-8") as file:
-                lines = file.readlines()
-            self.assertEqual(len(lines), 16)
-            self.assertIn("16 СЃРёРјРІРѕР»С–РІ | СЃР»РѕРІРѕ: РјС–РєСЂРѕРїСЂРѕС†РµСЃРѕСЂРЅРёР№ | РєС–Р»СЊРєС–СЃС‚СЊ: 1", lines[15])
+    # Перевірка обрізання довгого рядка
+    def test_long_line(self):
+        result = format_line("Programming language Python")
 
-    def test_missing_input_file(self):
-        with tempfile.TemporaryDirectory() as folder:
-            self.assertFalse(process_file(os.path.join(folder, "not_exist.txt"),
-                                          os.path.join(folder, "result.txt")))
+        self.assertEqual(len(result), 20)
+        self.assertEqual(result, "Programming language")
+
+    # Перевірка рядка довжиною рівно 20 символів
+    def test_exact_line(self):
+        result = format_line("12345678901234567890")
+
+        self.assertEqual(len(result), 20)
+        self.assertEqual(result, "12345678901234567890")
 
 
 if __name__ == "__main__":

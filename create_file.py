@@ -1,29 +1,43 @@
-"""Частина а): створення початкового текстового файлу (тімлід)."""
 
-# Кожний елемент списку стане окремим рядком файлу.
-# Усі слова мають довжину не більше 16 символів.
-START_TEXT = [
-    "Я і ти, ми вчимо Python.",
-    "Це файл: слова, текст, рядок та програма!",
-    "Алгоритм; функція, перевірка, розробка.",
-    "Тестування коду — це командна робота.",
-    "Машинобудування, мікропроцесорний, програмування.",
-]
+# ������� �) ��������� ���������� �����
+# ��������� ������: ���������� ��������� �����
+# ������ 6
 
 
-def create_file(file_name):
-    """Створює файл з кількох символьних рядків різної довжини."""
+# ������� �������� ����� � �������� �������
+def Open(file_name, mode):
     try:
-        # Режим "w" створює файл або перезаписує наявний.
-        # Кодування UTF-8 потрібне для українських літер.
-        with open(file_name, "w", encoding="utf-8") as file:
-            for line in START_TEXT:
-                file.write(line + "\n")
+        file = open(file_name, mode, encoding="utf-8")
+    except OSError:
+        print("File", file_name, "wasn't opened!")
+        return None
+    else:
+        print("File", file_name, "was opened!")
+        return file
 
-        print(f"Файл {file_name} успішно створено.")
-        return True
 
-    except OSError as error:
-        # Наприклад, немає прав на запис або неправильний шлях.
-        print(f"Помилка створення файлу {file_name}: {error}")
+# ������� ��������� ����������� �����
+def create_file(file_name):
+    file = Open(file_name, "w")
+
+    if file is None:
         return False
+
+    # ��������� ����� ���� �������
+    lines = [
+        "Python",
+        "Text file processing",
+        "Programming language Python is very interesting",
+        "Sumy State University",
+        "Hello world!"
+    ]
+
+    for line in lines:
+        file.write(line + "\n")
+
+    file.close()
+
+    print("Information was successfully added to " + file_name + "!")
+    print("File " + file_name + " was closed!")
+
+    return True

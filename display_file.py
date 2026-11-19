@@ -1,21 +1,25 @@
-"""Р§Р°СЃС‚РёРЅР° РІ): С‡РёС‚Р°РЅРЅСЏ С‚Р° РІРёРІРµРґРµРЅРЅСЏ СЂРµР·СѓР»СЊС‚Р°С‚Сѓ (СѓС‡Р°СЃРЅРёРє 2)."""
+
+# Частина в) Виведення вмісту файлу
+# Практична робота: Оброблення текстових файлів
+# Варіант 6
+
+from create_file import Open
 
 
-def display_file(file_name):
-    """Р’С–РґРѕР±СЂР°Р¶Р°С” С„Р°Р№Р» СЂРµР·СѓР»СЊС‚Р°С‚Сѓ РїРѕ СЂСЏРґРєР°С…."""
-    try:
-        print(f"\nР’РјС–СЃС‚ С„Р°Р№Р»Сѓ {file_name}:")
+# Функція читання та виведення результату
+def print_file(file_name):
+    file = Open(file_name, "r")
 
-        # Р’РёРєРѕСЂРёСЃС‚РѕРІСѓС”РјРѕ С†РёРєР» РїРѕ С„Р°Р№Р»Сѓ, С‰РѕР± РґСЂСѓРєСѓРІР°С‚Рё СЃР°РјРµ РїРѕ СЂСЏРґРєР°С….
-        with open(file_name, "r", encoding="utf-8") as file:
-            for line in file:
-                print(line.rstrip("\n"))
-
-        return True
-
-    except FileNotFoundError:
-        print(f"РџРѕРјРёР»РєР°: РЅРµ Р·РЅР°Р№РґРµРЅРѕ С„Р°Р№Р» {file_name}.")
+    if file is None:
         return False
-    except (OSError, UnicodeError) as error:
-        print(f"РџРѕРјРёР»РєР° С‡РёС‚Р°РЅРЅСЏ С„Р°Р№Р»Сѓ {file_name}: {error}")
-        return False
+
+    print("\nNew sequence:")
+
+    for line in file:
+        print("|" + line.rstrip("\r\n") + "|")
+
+    file.close()
+
+    print("File " + file_name + " was closed!")
+
+    return True

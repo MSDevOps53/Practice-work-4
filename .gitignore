@@ -1,0 +1,14 @@
+
+# Тимчасові файли Python
+__pycache__/
+*.py[cod]
+
+# Налаштування Visual Studio Code
+.vscode/
+
+# Налаштування IDE
+.idea/
+
+# Системні файли Windows
+Thumbs.db
+Desktop.ini

@@ -1,61 +1,43 @@
-"""Частина б): підрахунок слів різної довжини (учасник 1)."""
 
-import re
+# ������� �) ���������� ��������� �����
+# ��������� ������: ���������� ��������� �����
+# ������ 6
 
-# За умовою довжина кожного слова не повинна перевищувати 16 символів.
-MAX_LENGTH = 16
-
-
-def get_words(text):
-    """Повертає слова, відокремлюючи їх пробілами та розділовими знаками."""
-    # Регулярний вираз знаходить послідовності літер (у т. ч. українських).
-    # Цифри, пробіли та розділові знаки не входять до складу слів.
-    return re.findall(r"[^\W\d_]+", text, flags=re.UNICODE)
+from create_file import Open
 
 
-def count_words(text):
-    """Групує всі входження слів за кількістю символів від 1 до 16."""
-    # Словник: ключ — довжина слова, значення — список слів цієї довжини.
-    groups = {length: [] for length in range(1, MAX_LENGTH + 1)}
-
-    for word in get_words(text):
-        length = len(word)
-        if length > MAX_LENGTH:
-            # Замість непомітного пропуску слова повідомляємо про порушення умови.
-            raise ValueError(f"Слово «{word}» має {length} символів (максимум 16).")
-        groups[length].append(word)
-
-    return groups
+# ������� ������������ ����� �� 20 �������
+def format_line(line):
+    return line.ljust(20)[:20]
 
 
-def process_file(source_name, result_name):
-    """Читає TF4_1.txt, рахує слова та записує 16 рядків до TF4_2.txt."""
-    try:
-        # Читаємо весь вміст першого файлу.
-        with open(source_name, "r", encoding="utf-8") as source:
-            text = source.read()
+# ������� ���������� �����
+def process_file(file1_name, file2_name):
+    file_r = Open(file1_name, "r")
 
-        groups = count_words(text)
-
-        # Створюємо файл із результатами обробки.
-        with open(result_name, "w", encoding="utf-8") as result:
-            for length in range(1, MAX_LENGTH + 1):
-                words = groups[length]
-                count = len(words)  # Ураховуємо й повторення однакових слів.
-                example = words[0] if words else "немає"
-
-                # Правильно відмінюємо слово «символ» (1, 2–4, 5–16).
-                unit = "символ" if length == 1 else ("символи" if length in (2, 3, 4) else "символів")
-
-                # Один рядок — одна довжина слова.
-                result.write(f"{length} {unit} | слово: {example} | кількість: {count}\n")
-
-        print(f"Обробку завершено. Результат записано у {result_name}.")
-        return True
-
-    except FileNotFoundError:
-        print(f"Помилка: не знайдено файл {source_name}.")
+    if file_r is None:
         return False
-    except (OSError, UnicodeError, ValueError) as error:
-        print(f"Помилка обробки файлів: {error}")
+
+    file_w = Open(file2_name, "w")
+
+    if file_w is None:
+        file_r.close()
         return False
+
+    for line in file_r:
+        # ��������� ������� �������� �� ����� �����
+        line = line.rstrip("\r\n")
+
+        # ���������� ����� �������� 20 �������
+        new_line = format_line(line)
+
+        # ����� ���������� � ������ ����
+        file_w.write(new_line + "\n")
+
+    file_r.close()
+    file_w.close()
+
+    print("Information was successfully added to " + file2_name + "!")
+    print("Files were closed!")
+
+    return True
